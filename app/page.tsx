@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import Cal, { getCalApi } from "@calcom/embed-react";
+import { useEffect } from "react";
 
 const P = {
   bg: "#F4EFE4",
@@ -32,197 +33,25 @@ function CheckIcon({ color }: { color: string }) {
 }
 
 function Scheduler() {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const [viewMonth, setViewMonth] = useState(
-    new Date(today.getFullYear(), today.getMonth(), 1)
-  );
-
-  // Default selected = next available weekday after today
-  const nextAvail = (() => {
-    const d = new Date(today);
-    d.setDate(d.getDate() + 1);
-    while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() + 1);
-    return d;
-  })();
-
-  const [selectedDate, setSelectedDate] = useState<Date>(nextAvail);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [confirmed, setConfirmed] = useState(false);
-
-  const monthName = viewMonth.toLocaleString("en-US", { month: "long" });
-  const year = viewMonth.getFullYear();
-
-  const firstDay = new Date(viewMonth.getFullYear(), viewMonth.getMonth(), 1);
-  const startOffset = firstDay.getDay();
-  const daysInMonth = new Date(viewMonth.getFullYear(), viewMonth.getMonth() + 1, 0).getDate();
-  const cells: (Date | null)[] = [];
-  for (let i = 0; i < 42; i++) {
-    const dayNum = i - startOffset + 1;
-    if (dayNum < 1 || dayNum > daysInMonth) { cells.push(null); continue; }
-    cells.push(new Date(viewMonth.getFullYear(), viewMonth.getMonth(), dayNum));
-  }
-
-  const isAvailable = (d: Date) => {
-    const dow = d.getDay();
-    if (dow === 0 || dow === 6) return false;
-    if (d <= today) return false;
-    return true;
-  };
-
-  const sameDay = (a: Date | null, b: Date | null) =>
-    !!a && !!b &&
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate();
-
-  const times = ["9:00 am", "9:30 am", "10:00 am", "11:30 am", "1:00 pm", "2:30 pm", "3:00 pm", "4:00 pm"];
-
-  const stepMonth = (delta: number) => {
-    setViewMonth(new Date(viewMonth.getFullYear(), viewMonth.getMonth() + delta, 1));
-  };
-
-  if (confirmed && selectedDate && selectedTime) {
-    return (
-      <div
-        className="sch-confirm"
-        style={{ borderColor: P.border, background: P.surface }}
-      >
-        <div className="sch-confirm-mark" style={{ background: P.accent }} aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-        </div>
-        <h3 className="sch-confirm-h">You&apos;re booked.</h3>
-        <p className="sch-confirm-p" style={{ color: P.muted }}>
-          {selectedDate.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })} · {selectedTime} ET
-        </p>
-        <p className="sch-confirm-p" style={{ color: P.muted, marginTop: 6 }}>
-          A calendar invite is on its way. Reply to it with anything you want me to read beforehand.
-        </p>
-        <button
-          className="sch-reset"
-          onClick={() => { setConfirmed(false); setSelectedTime(null); }}
-          style={{ color: P.accent }}
-        >
-          Pick another time
-        </button>
-      </div>
-    );
-  }
+  useEffect(() => {
+    (async () => {
+      const cal = await getCalApi({ namespace: "intro" });
+      cal("ui", {
+        theme: "light",
+        hideEventTypeDetails: false,
+        layout: "month_view",
+      });
+    })();
+  }, []);
 
   return (
-    <div
-      className="sch"
-      style={{
-        "--surface": P.surface,
-        "--border": P.border,
-        "--accent": P.accent,
-        "--muted": P.muted,
-      } as React.CSSProperties}
-    >
-      <div className="sch-head">
-        <div className="sch-host">
-          <div className="sch-avatar" style={{ background: P.accent }}>JC</div>
-          <div>
-            <div className="sch-host-name">Intro call · Basis</div>
-            <div className="sch-host-meta" style={{ color: P.muted }}>
-              <span className="sch-pill">15 min</span>
-              <span className="sch-dot" aria-hidden="true">·</span>
-              <span>Google Meet</span>
-              <span className="sch-dot" aria-hidden="true">·</span>
-              <span>ET / New York</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="sch-body">
-        <div className="sch-cal">
-          <div className="sch-cal-head">
-            <div className="sch-month">{monthName} {year}</div>
-            <div className="sch-nav">
-              <button className="sch-navbtn" onClick={() => stepMonth(-1)} aria-label="Previous month">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="15 18 9 12 15 6" />
-                </svg>
-              </button>
-              <button className="sch-navbtn" onClick={() => stepMonth(1)} aria-label="Next month">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div className="sch-dow">
-            {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
-              <div key={i} className="sch-dow-cell" style={{ color: P.muted }}>{d}</div>
-            ))}
-          </div>
-
-          <div className="sch-grid">
-            {cells.map((d, i) => {
-              if (!d) return <div key={i} className="sch-cell sch-cell-empty" />;
-              const avail = isAvailable(d);
-              const isSel = sameDay(d, selectedDate);
-              const isToday = sameDay(d, today);
-              return (
-                <button
-                  key={i}
-                  disabled={!avail}
-                  className={[
-                    "sch-cell",
-                    avail ? "sch-cell-avail" : "sch-cell-disabled",
-                    isSel ? "sch-cell-sel" : "",
-                    isToday ? "sch-cell-today" : "",
-                  ].join(" ")}
-                  onClick={() => { setSelectedDate(d); setSelectedTime(null); }}
-                  style={isSel ? { background: P.accent, color: "#fff" } : undefined}
-                >
-                  {d.getDate()}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="sch-times">
-          <div className="sch-times-head" style={{ color: P.muted }}>
-            {selectedDate
-              ? selectedDate.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" })
-              : "Select a day"}
-          </div>
-          <div className="sch-times-list">
-            {selectedDate
-              ? times.map((t) => {
-                  const isSel = selectedTime === t;
-                  return (
-                    <div key={t} className={`sch-time-row${isSel ? " has-confirm" : ""}`}>
-                      <button
-                        className={`sch-time${isSel ? " sch-time-sel" : ""}`}
-                        onClick={() => setSelectedTime(t)}
-                        style={isSel ? { borderColor: P.accent, color: P.accent } : undefined}
-                      >
-                        {t}
-                      </button>
-                      {isSel && (
-                        <button
-                          className="sch-confirm-btn"
-                          onClick={() => setConfirmed(true)}
-                          style={{ background: P.accent }}
-                        >
-                          Confirm
-                        </button>
-                      )}
-                    </div>
-                  );
-                })
-              : null}
-          </div>
-        </div>
-      </div>
+    <div style={{ width: "100%", height: 600, overflowY: "auto", overflowX: "hidden", borderRadius: 12 }}>
+      <Cal
+        namespace="intro"
+        calLink="arshiagm/15min"
+        style={{ width: "100%", height: "100%" }}
+        config={{ layout: "month_view", theme: "light" }}
+      />
     </div>
   );
 }
@@ -267,7 +96,7 @@ export default function Home() {
             </h1>
 
             <p className="sub" style={{ color: P.muted }}>
-              Basis helps hospital revenue teams identify patients eligible for disability-linked Medicaid — and automates the enrollment workflow end-to-end.
+             Now enrolling hospitals and clinics.
             </p>
 
             {/* <ul className="checks" style={{ color: P.ink }}>
@@ -301,9 +130,9 @@ export default function Home() {
 
           <aside className="hero-right" id="book">
             <Scheduler />
-            <div className="cal-footnote" style={{ color: P.muted }}>
+            {/* <div className="cal-footnote" style={{ color: P.muted }}>
               Powered by Cal.com · Reschedule anytime from your invite
-            </div>
+            </div> */}
           </aside>
         </div>
       </main>
