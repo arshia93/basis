@@ -234,7 +234,6 @@ export default function Home() {
       <header className="nav">
         <div className="nav-inner">
           <div className="brand">
-            <span className="brand-mark" style={{ background: P.ink, color: P.bg }}>B</span>
             <span className="brand-word">Basis</span>
           </div>
           {/* <nav className="nav-links" style={{ color: P.muted }}>
@@ -271,7 +270,7 @@ export default function Home() {
               Basis helps hospital revenue teams identify patients eligible for disability-linked Medicaid — and automates the enrollment workflow end-to-end.
             </p>
 
-            <ul className="checks" style={{ color: P.ink }}>
+            {/* <ul className="checks" style={{ color: P.ink }}>
               <li>
                 <CheckIcon color={P.check} />
                 <span>Talking to <strong>10 RCM leaders</strong> this month</span>
@@ -284,10 +283,10 @@ export default function Home() {
                 <CheckIcon color={P.check} />
                 <span>No pitch — questions about your workflow</span>
               </li>
-            </ul>
+            </ul> */}
 
             <div className="proof" style={{ borderTopColor: P.border }}>
-              <div className="proof-row" style={{ color: P.muted }}>
+              {/* <div className="proof-row" style={{ color: P.muted }}>
                 <span className="proof-label">Built by operators from</span>
                 <span className="proof-logos">
                   <span className="proof-logo">Stanford&nbsp;Health</span>
@@ -296,7 +295,7 @@ export default function Home() {
                   <span className="proof-sep" style={{ background: P.border }} />
                   <span className="proof-logo">Oscar</span>
                 </span>
-              </div>
+              </div> */}
             </div>
           </section>
 
