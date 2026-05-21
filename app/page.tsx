@@ -178,7 +178,8 @@ export default function Home() {
       <header className="nav">
         <div className="nav-inner">
           <div className="brand">
-            <span className="brand-word">Basis</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/basis-full-logo.svg" alt="Basis" className="brand-logo" />
           </div>
           {/* <nav className="nav-links" style={{ color: P.muted }}>
             <a href="#how" className="nav-secondary">How it works</a>
@@ -209,7 +210,7 @@ export default function Home() {
               Turning uncompensated care into reimbursable coverage.
             </h1>
 
-            <p className="sub" style={{ color: P.muted }}>
+            <p>
              Now enrolling pilot hospitals and clinics.
             </p>
 

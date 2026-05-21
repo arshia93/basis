@@ -52,6 +52,11 @@ button { font-family: inherit; }
   letter-spacing: -0.02em;
   font-size: 26px;
 }
+.brand-logo {
+  height: 44px;
+  width: auto;
+  display: block;
+}
 .brand-mark {
   width: 26px; height: 26px;
   border-radius: 7px;
