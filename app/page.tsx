@@ -91,12 +91,11 @@ export default function Home() {
             </div> */}
 
             <h1 className="h1">
-              <span className="h1-line">Turning uncompensated care</span>
-              <span className="h1-line">into reimbursable coverage.</span>
+              Turning uncompensated care into reimbursable coverage.
             </h1>
 
             <p className="sub" style={{ color: P.muted }}>
-             Now enrolling hospitals and clinics.
+             Now enrolling pilot hospitals and clinics.
             </p>
 
             {/* <ul className="checks" style={{ color: P.ink }}>
@@ -114,8 +113,8 @@ export default function Home() {
               </li>
             </ul> */}
 
-            <div className="proof" style={{ borderTopColor: P.border }}>
-              {/* <div className="proof-row" style={{ color: P.muted }}>
+            {/* <div className="proof" style={{ borderTopColor: P.border }}>
+              <div className="proof-row" style={{ color: P.muted }}>
                 <span className="proof-label">Built by operators from</span>
                 <span className="proof-logos">
                   <span className="proof-logo">Stanford&nbsp;Health</span>
@@ -124,8 +123,8 @@ export default function Home() {
                   <span className="proof-sep" style={{ background: P.border }} />
                   <span className="proof-logo">Oscar</span>
                 </span>
-              </div> */}
-            </div>
+              </div>
+            </div> */}
           </section>
 
           <aside className="hero-right" id="book">
