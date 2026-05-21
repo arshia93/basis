@@ -5,6 +5,14 @@
   --font-mono: var(--font-geist-mono);
 }
 
+:root {
+  --bg: #F4EFE4;
+  --ink: #0F172A;
+  --muted: #475569;
+  --border: rgba(15, 23, 42, 0.10);
+  --surface: #FFFFFF;
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
@@ -174,15 +182,27 @@ button { font-family: inherit; }
 }
 
 /* ─── Scheduler ─── */
+@keyframes schFadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes schDotPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(108, 156, 122, 0.5); }
+  50%      { box-shadow: 0 0 0 5px rgba(108, 156, 122, 0); }
+}
+
 .sch {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   box-shadow:
     0 0.5px 0 rgba(255,255,255,0.6) inset,
     0 1px 2px rgba(15,23,42,0.04),
-    0 24px 60px -28px rgba(15,23,42,0.18);
+    0 28px 60px -28px rgba(15,23,42,0.22);
+  animation: schFadeUp 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 .sch-head {
   padding: 20px 22px 18px;
@@ -190,13 +210,27 @@ button { font-family: inherit; }
 }
 .sch-host { display: flex; align-items: center; gap: 12px; }
 .sch-avatar {
-  width: 36px; height: 36px;
-  border-radius: 10px;
+  position: relative;
+  width: 38px; height: 38px;
+  border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
   color: #fff;
   font-weight: 600;
   font-size: 13px;
   letter-spacing: -0.01em;
+  box-shadow: 0 0 0 3px var(--surface), 0 0 0 4px var(--border);
+}
+.sch-avatar::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #6C9C7A;
+  border: 2px solid var(--surface);
+  animation: schDotPulse 2.6s ease-out infinite;
 }
 .sch-host-name {
   font-size: 16px;
@@ -288,14 +322,24 @@ button { font-family: inherit; }
 .sch-cell-empty { cursor: default; }
 .sch-cell-disabled {
   color: var(--muted);
-  opacity: 0.32;
-  cursor: not-allowed;
-  text-decoration: line-through;
-  text-decoration-thickness: 1px;
+  opacity: 0.3;
+  cursor: default;
 }
-.sch-cell-avail:hover { background: rgba(15,23,42,0.06); }
-.sch-cell-today { box-shadow: inset 0 0 0 1px var(--border); }
-.sch-cell-sel { font-weight: 600; }
+.sch-cell-avail {
+  background: rgba(15, 23, 42, 0.045);
+  font-weight: 600;
+}
+.sch-cell-avail:hover { background: rgba(15, 23, 42, 0.1); }
+.sch-cell-today {
+  box-shadow: inset 0 0 0 1.5px rgba(15, 23, 42, 0.45);
+  font-weight: 600;
+}
+.sch-cell-sel {
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 600;
+}
+.sch-cell-sel:hover { background: #1E293B; }
 
 .sch-times { padding: 18px 18px 20px; display: flex; flex-direction: column; min-height: 0; }
 .sch-times-head {
@@ -375,6 +419,50 @@ button { font-family: inherit; }
   text-underline-offset: 3px;
   font-family: inherit;
 }
+
+.sch-foot {
+  border-top: 1px solid var(--border);
+  padding: 14px 16px 16px;
+  background:
+    linear-gradient(180deg, rgba(244, 239, 228, 0.0) 0%, rgba(244, 239, 228, 0.35) 100%);
+}
+.sch-book-cta {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 200ms cubic-bezier(0.2, 0.7, 0.2, 1),
+              background 200ms,
+              box-shadow 200ms;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 8px 18px -10px rgba(15, 23, 42, 0.4);
+}
+.sch-book-cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 45%);
+  pointer-events: none;
+}
+.sch-book-cta svg { transition: transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+.sch-book-cta:hover { background: #1E293B; transform: translateY(-1px); }
+.sch-book-cta:hover svg { transform: translateX(4px); }
+.sch-book-cta:active { transform: translateY(0); }
+.sch-book-cta:focus-visible { outline: 2px solid rgba(15, 23, 42, 0.4); outline-offset: 3px; }
 
 /* ─── Footer ─── */
 .foot {
