@@ -15,9 +15,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Basis — Coverage your hospital is missing",
   description: "Basis helps hospital revenue teams identify patients eligible for disability-linked Medicaid and automates the enrollment workflow end-to-end.",
-  icons: {
-    icon: "/basis-mark.svg",
-  },
 };
 
 export default function RootLayout({
